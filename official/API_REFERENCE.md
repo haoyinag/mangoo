@@ -52,11 +52,11 @@ with:
 - `onState(listener)`
 - `getState()`
 
-## `runParallel`
+## `runTask`
 
 ### Signature
 ```ts
-runParallel(tasks, params?, options?)
+runTask(tasks, params?, options?)
 ```
 
 ### Options
@@ -77,7 +77,7 @@ createRunner({ concurrency?, mode? })
 
 ### Return
 - `runTask`
-- `runParallel`
+- `runTask`
 
 ## `useTask` (React)
 

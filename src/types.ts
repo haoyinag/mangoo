@@ -46,6 +46,8 @@ export interface TaskRunConfig<I = unknown, M extends Record<string, unknown> = 
 
 export interface TaskRunOptions {
   signal?: AbortSignal;
+  concurrency?: number;
+  mode?: "fail-fast" | "collect-all";
 }
 
 export interface TaskHandleSimple<T = unknown, M extends Record<string, unknown> = Record<string, unknown>> {

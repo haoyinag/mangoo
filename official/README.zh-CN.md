@@ -4,7 +4,7 @@ mangoo 是一个原生优先的异步护栏库。
 
 ## 当前 API 范围
 - `runTask`
-- `runParallel`
+- `runTask`
 - `createRunner`
 - `useTask`（`mangoo/react`）
 - `useTask`（`mangoo/vue`）

@@ -3,17 +3,22 @@ import type { ParallelRunOptions, ParallelTask } from "./types";
 
 function attachSignal(parent?: AbortSignal) {
   const controller = new AbortController();
-  if (!parent) return controller;
+  if (!parent) return { controller, cleanup: () => {} };
 
   if (parent.aborted) {
     controller.abort(parent.reason);
+    return { controller, cleanup: () => {} };
   } else {
-    parent.addEventListener("abort", () => controller.abort(parent.reason), { once: true });
+    const onAbort = () => controller.abort(parent.reason);
+    parent.addEventListener("abort", onAbort, { once: true });
+    return {
+      controller,
+      cleanup: () => parent.removeEventListener("abort", onAbort)
+    };
   }
-  return controller;
 }
 
-export async function runParallel<I = unknown, O = unknown>(
+export async function runTasks<I = unknown, O = unknown>(
   tasks: Array<ParallelTask<I, O>>,
   params?: I,
   options: ParallelRunOptions = {}
@@ -22,11 +27,11 @@ export async function runParallel<I = unknown, O = unknown>(
   const mode = options.mode ?? "fail-fast";
   const abortOnError = mode === "fail-fast";
 
-  if (concurrency <= 0 || Number.isNaN(concurrency)) {
+  if (!Number.isInteger(concurrency) || concurrency <= 0 || Number.isNaN(concurrency)) {
     throw new AsyncTaskError({
       code: "INVALID_CONCURRENCY",
       kind: "business",
-      message: "concurrency must be > 0",
+      message: "concurrency must be a positive integer",
       phase: "parallel",
       aborted: false
     });
@@ -34,7 +39,7 @@ export async function runParallel<I = unknown, O = unknown>(
 
   if (tasks.length === 0) return [];
 
-  const controller = attachSignal(options.signal);
+  const { controller, cleanup } = attachSignal(options.signal);
   const results: O[] = new Array(tasks.length);
   const errors: Array<AsyncTaskError | undefined> = new Array(tasks.length);
 
@@ -110,5 +115,6 @@ export async function runParallel<I = unknown, O = unknown>(
     schedule();
   }).finally(() => {
     controller.abort("completed");
+    cleanup();
   });
 }

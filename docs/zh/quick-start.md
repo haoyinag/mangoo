@@ -7,11 +7,11 @@ npm install mangoo
 
 ## 最小示例
 ```ts
-import { runTask, runParallel } from "mangoo";
+import { runTask } from "mangoo";
 
 const task = runTask(async ({ signal }) => {
   const token = await getToken(signal);
-  const [notices, vip] = await runParallel(
+  const [notices, vip] = await runTask(
     [
       () => fetchNotices(token, signal),
       () => fetchVipInfo(token, signal)

@@ -43,7 +43,6 @@ export default defineConfig({
           text: 'Core APIs',
           items: [
             { text: 'runTask', link: '/run-task' },
-            { text: 'runParallel', link: '/run-parallel' },
             { text: 'Error Handling', link: '/error-handling' }
           ]
         },
@@ -72,7 +71,6 @@ export default defineConfig({
           text: '核心 API',
           items: [
             { text: 'runTask', link: '/zh/run-task' },
-            { text: 'runParallel', link: '/zh/run-parallel' },
             { text: '取消与 Signal', link: '/zh/signal-guide' },
             { text: '并发模式对照', link: '/zh/parallel-mode-table' }
           ]
@@ -89,6 +87,7 @@ export default defineConfig({
           items: [
             { text: 'API 参考', link: '/zh/api-reference' },
             { text: '最佳实践', link: '/zh/best-practices' },
+            { text: '全局 Runner 模板', link: '/zh/global-runner-template' },
             { text: '常见问题', link: '/zh/faq' },
             { text: '版本说明', link: '/zh/version' }
           ]

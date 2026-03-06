@@ -49,11 +49,11 @@ type TaskContext<I, M> = {
 - `onState(listener)`
 - `getState()`
 
-## `runParallel`
+## `runTask`
 
 ### 签名
 ```ts
-runParallel(tasks, params?, options?)
+runTask(tasks, params?, options?)
 ```
 
 ### options
@@ -74,7 +74,7 @@ createRunner({ concurrency?, mode? })
 
 ### 返回
 - `runTask`
-- `runParallel`
+- `runTask`
 
 ## `useTask`（React）
 

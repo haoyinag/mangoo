@@ -11,7 +11,7 @@
 
 ## 示例
 ```ts
-await runParallel(tasks, undefined, {
+await runTask(tasks, undefined, {
   concurrency: 3,
   mode: "fail-fast"
 });

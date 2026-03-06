@@ -4,15 +4,16 @@
 
 ### `runTask(taskFn, config?)`
 
-Runs one async workflow and returns a `TaskHandleSimple`.
+Run a single workflow with task state and cancellation.
 
-### `runParallel(tasks, params?, options?)`
+### `runTask(tasks, params?, options?)`
 
-Runs parallel sub-tasks with concurrency control.
+Run multiple tasks in parallel with concurrency and error mode control.
+
+- `params`: shared input object passed to every sub-task as `ctx.params`
+- `options`: `{ concurrency, mode, signal }`
 
 ### `createRunner(options?)`
-
-Creates a runner with default `runParallel` options:
 
 ```ts
 createRunner({
@@ -25,14 +26,17 @@ Returns:
 
 ```ts
 {
-  runTask,
-  runParallel
+  runTask
 }
 ```
 
-## React (`mangoo/react`)
+## React (`mangoo/react`) / Vue (`mangoo/vue`)
 
-### `useTask(taskFn, options?, initialMeta?)`
+### `useTask(taskInput, options?, initialMeta?)`
+
+`taskInput` can be:
+- `taskFn`
+- `tasks[]`
 
 Returns:
 
@@ -46,32 +50,15 @@ Returns:
   meta,
   run,
   execute,
-  cancel
+  cancel,
+  reset
 }
 ```
-
-## Vue (`mangoo/vue`)
-
-### `useTask(taskFn, options?, initialMeta?)`
-
-Returns the same fields as React adapter, exposed as Vue refs where applicable.
 
 ## Core types
 
 ```ts
 type TaskStatus = 'idle' | 'running' | 'success' | 'error' | 'aborted';
-```
-
-```ts
-interface TaskState<T, M> {
-  status: TaskStatus;
-  loading: boolean;
-  data: T | undefined;
-  error: AsyncTaskError | null;
-  meta: M;
-  startedAt: number | null;
-  endedAt: number | null;
-}
 ```
 
 ```ts

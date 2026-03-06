@@ -4,7 +4,7 @@
 
 `mangoo` 负责护栏，不负责改写业务结构。
 
-## 2. 只在并发段使用 runParallel
+## 2. 只在并发段使用 runTask
 
 串行依赖链保持原生写法，可读性最好。
 
@@ -21,3 +21,7 @@
 - `success`: 正常渲染
 - `error`: 展示错误并上报
 - `aborted`: 静默结束或轻提示
+
+## 6. 推荐直接套用全局模板
+
+- [全局 Runner 最佳实践模板（React）](/zh/global-runner-template)

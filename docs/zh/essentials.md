@@ -1,16 +1,14 @@
 # 核心概念
 
-## Task（任务）
+## 一个 API，两种模式
 
-一次 `runTask` 执行就是一个任务实例，具备：
-- `id`
-- `result`
-- `cancel(reason?)`
-- `onState` / `getState`
+`runTask` 同时支持：
+- 传入函数：返回 `TaskHandleSimple`（有状态）
+- 传入数组：返回 `Promise<O[]>`（并发执行）
 
-## State（状态）
+## 状态模型
 
-每个任务都有统一状态结构：
+函数模式下，任务状态统一为：
 - `status`: `idle | running | success | error | aborted`
 - `loading`
 - `data`
@@ -18,19 +16,18 @@
 - `meta`
 - `startedAt` / `endedAt`
 
-## Cancellation（取消）
+## 取消模型
 
-取消本质是中断 `AbortSignal`。
+取消基于 `AbortSignal`，属于协作式机制：
+- 你调用 `cancel()` 只会触发中断信号
+- 请求是否立即停止，取决于底层是否使用 `signal`
 
-要点：
-- 取消是“协作式”的
-- 你的请求层要把 `signal` 传下去
-- 底层不响应 `signal` 时，任务可能仍成功返回
+## 并发模型
 
-## Runner（预配置执行器）
+数组模式支持：
+- `concurrency`（必须是正整数）
+- `mode`: `fail-fast | collect-all`
 
-`createRunner({ concurrency, mode })` 会返回一组 API：
-- `runner.runTask`
-- `runner.runParallel`
+## Runner 默认值
 
-默认配置只影响 `runParallel`。
+`createRunner({ concurrency, mode })` 只影响数组模式下的 `runTask` 默认配置。

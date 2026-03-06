@@ -9,7 +9,7 @@
 
 ## 核心能力
 - `runTask`：统一异步任务状态与错误包装
-- `runParallel`：并发执行与并发数限制
+- `runTask`：并发执行与并发数限制
 - `createRunner`：可复用的任务运行器
 - `useReactAsyncTask`：React 侧任务 Hook
 - `useVueAsyncTask`：Vue 侧任务 Hook

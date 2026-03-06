@@ -8,13 +8,19 @@
 
 任务执行错误不会通过 `throw` 冒泡；请通过 `await task.result` 的 `status` 判断。
 
-## `runParallel` 在 `collect-all` 下怎么拿到全部错误？
+## `runTask` 在 `collect-all` 下怎么拿到全部错误？
 
 捕获 `AggregateError`，读取 `error.errors`。
 
+## `phase` 到底是什么？
+
+有两种：
+- `meta.phase`：你自定义的业务阶段字段（可选）。
+- `error.phase`：错误对象里的系统阶段标记（如 `task`、`parallel`）。
+
 ## React / Vue 一定要用吗？
 
-不需要。核心 API（`runTask/runParallel/createRunner`）是框架无关的。
+不需要。核心 API（`runTask/createRunner`）是框架无关的。
 
 ## 为什么建议从 `mangoo/react` 或 `mangoo/vue` 导入 Hook？
 

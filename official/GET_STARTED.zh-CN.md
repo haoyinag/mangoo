@@ -4,18 +4,18 @@
 
 ## 第 1 步：先记住 2 个 API
 1. `runTask`：跑一个完整异步任务（自动给你状态与取消）
-2. `runParallel`：在任务里跑并发请求
+2. `runTask`（数组入参）：在任务里跑并发请求
 
 ## 第 2 步：直接复制这个最小模板
 ```ts
-import { runTask, runParallel } from "mangoo";
+import { runTask } from "mangoo";
 
 const task = runTask(async ({ params, signal }) => {
   // 串行步骤（原生 await）
   const token = await login(params, signal);
 
-  // 并发步骤（仅并发段用 runParallel）
-  const [notices, vip] = await runParallel(
+  // 并发步骤（仅并发段用 runTask）
+  const [notices, vip] = await runTask(
     [
       () => fetchNotices(token, signal),
       () => fetchVip(token, signal)
@@ -45,11 +45,11 @@ fetch(url, { signal })
 ```
 - 如果你们旧项目不支持，先不改，也能先用任务状态与取消语义。
 
-## 第 5 步：什么时候用 `runParallel`
+## 第 5 步：什么时候用 `runTask`
 - 有并发请求才用
 - 串行依赖链继续原生 `await`
 
 ## 第 6 步：推荐学习顺序
 1. 先用 `runTask` 跑通一个页面提交流程
-2. 再把首页并发请求替换为 `runParallel`
+2. 再把首页并发请求替换为 `runTask`
 3. 最后再看 `meta`（进阶）

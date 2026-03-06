@@ -28,14 +28,19 @@ function createInitialState<T, M extends Record<string, unknown>>(meta: M): Task
 
 function attachSignal(parent?: AbortSignal) {
   const controller = new AbortController();
-  if (!parent) return controller;
+  if (!parent) return { controller, cleanup: () => {} };
 
   if (parent.aborted) {
     controller.abort(parent.reason);
+    return { controller, cleanup: () => {} };
   } else {
-    parent.addEventListener("abort", () => controller.abort(parent.reason), { once: true });
+    const onAbort = () => controller.abort(parent.reason);
+    parent.addEventListener("abort", onAbort, { once: true });
+    return {
+      controller,
+      cleanup: () => parent.removeEventListener("abort", onAbort)
+    };
   }
-  return controller;
 }
 
 export function runTask<I = unknown, O = unknown, M extends Record<string, unknown> = Record<string, unknown>>(
@@ -49,7 +54,7 @@ export function runTask<I = unknown, O = unknown, M extends Record<string, unkno
   };
 
   const id = `task_${++taskCounter}`;
-  const controller = attachSignal(parsed.signal);
+  const { controller, cleanup } = attachSignal(parsed.signal);
   const meta = parsed.meta;
 
   const listeners = new Set<(state: TaskState<O, M>) => void>();
@@ -113,6 +118,7 @@ export function runTask<I = unknown, O = unknown, M extends Record<string, unkno
       };
     } finally {
       controller.abort("completed");
+      cleanup();
     }
   })();
 

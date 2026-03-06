@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { runParallel, useReactAsyncTask } from "../../src/index";
+import { runTask } from "../../src/index";
+import { useTask } from "../../src/react";
 import { fetchNotices, fetchPagedList, fetchVipInfo } from "../scenario/mockBusinessApi";
 
 interface HomePageProps {
@@ -9,10 +10,10 @@ interface HomePageProps {
 }
 
 export default function HomePage({ accessToken, qrUrl, onBack }: HomePageProps) {
-  const { run, cancel, status, loading, data, error } = useReactAsyncTask(async ({ signal, input }) => {
-    const token = String(input);
+  const { run, cancel, status, loading, data, error } = useTask(async ({ signal, params }) => {
+    const token = String(params);
 
-    const [notices, listPage, vip] = await runParallel(
+    const [notices, listPage, vip] = await runTask(
       [
         () => fetchNotices(token, signal),
         () => fetchPagedList(token, 1, 10, signal),
@@ -22,10 +23,7 @@ export default function HomePage({ accessToken, qrUrl, onBack }: HomePageProps) 
       { concurrency: 2, signal }
     );
 
-    const vipTip =
-      vip.daysLeft <= 7
-        ? `VIP 剩余 ${vip.daysLeft} 天，请及时续费`
-        : "VIP 有效期充足";
+    const vipTip = vip.daysLeft <= 7 ? `VIP 剩余 ${vip.daysLeft} 天，请及时续费` : "VIP 有效期充足";
 
     return { notices, listPage, vip, vipTip };
   });

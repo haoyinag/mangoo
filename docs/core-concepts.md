@@ -1,47 +1,38 @@
 # Core Concepts
 
-## 1) Task
+## One API, two modes
 
-A task is one async workflow executed through `runTask`.
+`runTask` supports two input shapes:
 
-A task has:
-- `id`
-- `result` promise
-- `cancel(reason?)`
-- state subscription (`onState`, `getState`)
+- function input: returns `TaskHandleSimple` (stateful task)
+- array input: returns `Promise<O[]>` (parallel execution)
 
-## 2) State
+## Task state model
 
-Each task run exposes one state snapshot model:
-
+Function mode provides:
 - `status`: `idle | running | success | error | aborted`
-- `loading`: boolean
-- `data`: success payload
-- `error`: `AsyncTaskError | null`
-- `meta`: user-defined mutable meta object
+- `loading`
+- `data`
+- `error`
+- `meta`
 - `startedAt` / `endedAt`
 
-## 3) Cancellation model
+## Cancellation model
 
-`mangoo` cancels by aborting an internal `AbortController`.
+Cancellation is cooperative via `AbortSignal`.
 
-Important:
-- cancellation is cooperative
-- your async code (or HTTP client) must honor `signal`
-- if underlying work ignores `signal`, it may still complete
+- `cancel()` aborts internal controller
+- your async layer must consume `signal` to stop work immediately
 
-## 4) Parallel model
+## Parallel model
 
-`runParallel` executes task array with a concurrency limit.
+Array mode supports:
+- `concurrency` (positive integer)
+- `mode`: `fail-fast | collect-all`
 
-Modes:
-- `fail-fast`: reject immediately on first failure and abort siblings
-- `collect-all`: wait all, then reject with `AggregateError` if any failed
+`fail-fast` rejects on first failure.
+`collect-all` waits all and rejects with `AggregateError` when any fail.
 
-## 5) Runner
+## Runner defaults
 
-`createRunner({ concurrency, mode })` gives a preconfigured pair:
-- `runner.runTask(...)`
-- `runner.runParallel(...)`
-
-Defaults are only for `runParallel`.
+`createRunner({ concurrency, mode })` sets default options for array mode of `runTask`.

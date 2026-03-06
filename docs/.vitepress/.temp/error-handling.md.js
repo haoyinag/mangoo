@@ -1,7 +1,7 @@
 import { ssrRenderAttrs, ssrRenderStyle } from "vue/server-renderer";
 import { useSSRContext } from "vue";
 import { _ as _export_sfc } from "./plugin-vue_export-helper.1tPrXgE0.js";
-const __pageData = JSON.parse('{"title":"Error Handling","description":"","frontmatter":{},"headers":[],"relativePath":"error-handling.md","filePath":"error-handling.md","lastUpdated":null}');
+const __pageData = JSON.parse('{"title":"Error Handling","description":"","frontmatter":{},"headers":[],"relativePath":"error-handling.md","filePath":"error-handling.md","lastUpdated":1772787619000}');
 const _sfc_main = { name: "error-handling.md" };
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   _push(`<div${ssrRenderAttrs(_attrs)}><h1 id="error-handling" tabindex="-1">Error Handling <a class="header-anchor" href="#error-handling" aria-label="Permalink to &quot;Error Handling&quot;">​</a></h1><h2 id="error-shape" tabindex="-1">Error shape <a class="header-anchor" href="#error-shape" aria-label="Permalink to &quot;Error shape&quot;">​</a></h2><p><code>mangoo</code> normalizes task errors into <code>AsyncTaskError</code>:</p><div class="language-ts vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang">ts</span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span style="${ssrRenderStyle({ "--shiki-light": "#D73A49", "--shiki-dark": "#F97583" })}">interface</span><span style="${ssrRenderStyle({ "--shiki-light": "#6F42C1", "--shiki-dark": "#B392F0" })}"> AsyncTaskError</span><span style="${ssrRenderStyle({ "--shiki-light": "#24292E", "--shiki-dark": "#E1E4E8" })}"> {</span></span>

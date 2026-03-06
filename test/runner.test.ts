@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createRunner, runParallel, runTask } from "../src/index";
+import { createRunner, runTask } from "../src/index";
 
 function sleep(ms: number, signal?: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
@@ -56,11 +56,11 @@ describe("runner api", () => {
     expect(result.error?.kind).toBe("abort");
   });
 
-  it("runParallel limits concurrency", async () => {
+  it("runTask(tasks[]) limits concurrency", async () => {
     let active = 0;
     let maxActive = 0;
 
-    const result = await runParallel(
+    const result = await runTask(
       Array.from({ length: 8 }, (_, i) => async ({ signal }) => {
         active += 1;
         maxActive = Math.max(maxActive, active);
@@ -76,13 +76,13 @@ describe("runner api", () => {
     expect(maxActive).toBeLessThanOrEqual(2);
   });
 
-  it("createRunner applies default options", async () => {
+  it("createRunner applies default options for array tasks", async () => {
     const runner = createRunner({ concurrency: 2, mode: "fail-fast" });
 
     let active = 0;
     let maxActive = 0;
 
-    await runner.runParallel(
+    await runner.runTask(
       Array.from({ length: 6 }, (_, i) => async ({ signal }) => {
         active += 1;
         maxActive = Math.max(maxActive, active);
@@ -95,9 +95,9 @@ describe("runner api", () => {
     expect(maxActive).toBeLessThanOrEqual(2);
   });
 
-  it("runParallel supports mode=collect-all and returns AggregateError", async () => {
+  it("runTask(tasks[]) supports mode=collect-all and returns AggregateError", async () => {
     await expect(
-      runParallel(
+      runTask(
         [
           async () => {
             await sleep(5);
@@ -112,6 +112,12 @@ describe("runner api", () => {
         { mode: "collect-all", concurrency: 2 }
       )
     ).rejects.toBeInstanceOf(AggregateError);
+  });
+
+  it("runTask(tasks[]) rejects on non-integer concurrency", async () => {
+    await expect(
+      runTask([async () => 1], undefined, { concurrency: 1.5 })
+    ).rejects.toMatchObject({ code: "INVALID_CONCURRENCY" });
   });
 
   it("createRunner runTask uses config object style", async () => {

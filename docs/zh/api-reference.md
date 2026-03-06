@@ -4,15 +4,16 @@
 
 ### `runTask(taskFn, config?)`
 
-运行单个异步任务，返回 `TaskHandleSimple`。
+运行单个异步流程，返回带状态的任务句柄。
 
-### `runParallel(tasks, params?, options?)`
+### `runTask(tasks, params?, options?)`
 
-运行并发子任务，支持并发上限与失败策略。
+运行并发子任务，支持并发上限和失败策略。
+
+- `params`：共享入参，会传给每个子任务的 `ctx.params`
+- `options`：`{ concurrency, mode, signal }`
 
 ### `createRunner(options?)`
-
-创建带默认并发配置的运行器：
 
 ```ts
 createRunner({
@@ -25,14 +26,17 @@ createRunner({
 
 ```ts
 {
-  runTask,
-  runParallel
+  runTask
 }
 ```
 
-## React（`mangoo/react`）
+## React / Vue
 
-### `useTask(taskFn, options?, initialMeta?)`
+### `useTask(taskInput, options?, initialMeta?)`
+
+`taskInput` 支持：
+- `taskFn`
+- `tasks[]`
 
 返回字段：
 - `taskId`
@@ -42,29 +46,6 @@ createRunner({
 - `error`
 - `meta`
 - `run`
-- `execute`（`run` 别名）
+- `execute`
 - `cancel`
-
-## Vue（`mangoo/vue`）
-
-### `useTask(taskFn, options?, initialMeta?)`
-
-返回字段与 React 一致，对应值以 Vue `ref` 形式暴露。
-
-## 核心类型
-
-```ts
-type TaskStatus = 'idle' | 'running' | 'success' | 'error' | 'aborted';
-```
-
-```ts
-interface AsyncTaskError {
-  code: string;
-  message: string;
-  kind: 'abort' | 'network' | 'business' | 'unknown';
-  stepId?: string;
-  phase?: string;
-  cause?: unknown;
-  aborted: boolean;
-}
-```
+- `reset`

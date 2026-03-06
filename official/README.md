@@ -4,7 +4,7 @@ mangoo is a native-first async guardrail library.
 
 ## Current API Surface
 - `runTask`
-- `runParallel`
+- `runTask`
 - `createRunner`
 - `useTask` from `mangoo/react`
 - `useTask` from `mangoo/vue`

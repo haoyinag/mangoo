@@ -9,8 +9,8 @@
 
 `taskFn` 使用 `params` 获取本次执行输入。
 
-## runParallel
-`runParallel` 负责并发段：
+## runTask
+`runTask` 负责并发段：
 1. 并发上限 `concurrency`
 2. 失败策略 `mode: fail-fast | collect-all`
 

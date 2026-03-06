@@ -22,5 +22,5 @@ features:
   - title: One task, full state
     details: Every run has status, loading, data, error, meta and timestamps.
   - title: Practical concurrency control
-    details: Use runParallel only where needed, with fail-fast or collect-all modes.
+    details: Use runTask only where needed, with fail-fast or collect-all modes.
 ---

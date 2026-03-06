@@ -22,5 +22,5 @@ features:
   - title: 一次执行，一套状态
     details: status/loading/data/error/meta 和时间戳统一可观测。
   - title: 并发策略可控
-    details: 并发段用 runParallel，支持 fail-fast 与 collect-all。
+    details: 并发段用 runTask，支持 fail-fast 与 collect-all。
 ---

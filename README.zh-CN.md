@@ -10,7 +10,7 @@
 ## 当前主 API
 
 - `runTask`
-- `runParallel`
+- `runTask`（数组入参即并发模式）
 - `createRunner`
 - `useTask`（`mangoo/react`）
 - `useTask`（`mangoo/vue`）

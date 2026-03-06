@@ -6,16 +6,10 @@
 import { useTask } from 'mangoo/vue';
 ```
 
-## 基础示例
+## 函数模式
 
-```vue
-<script setup lang="ts">
-import { useTask } from 'mangoo/vue';
-
-type LoadInput = { id: string };
-type LoadData = { name: string };
-
-const task = useTask<LoadInput, LoadData, { phase: string }>(
+```ts
+const task = useTask(
   async ({ params, signal, setMeta }) => {
     setMeta({ phase: 'loading' });
     return api.fetchDetail(params.id, { signal });
@@ -23,25 +17,31 @@ const task = useTask<LoadInput, LoadData, { phase: string }>(
   { concurrency: 4, mode: 'fail-fast' },
   { phase: 'idle' }
 );
-
-function load() {
-  void task.run({ id: '1001' });
-}
-</script>
-
-<template>
-  <button :disabled="task.loading" @click="load">加载</button>
-  <button :disabled="!task.loading" @click="task.cancel('manual_cancel')">取消</button>
-
-  <p>{{ task.status }}</p>
-  <p>{{ task.meta.phase }}</p>
-  <p>{{ task.error?.message }}</p>
-  <p>{{ task.data?.name }}</p>
-</template>
 ```
 
-## 行为说明
+## 数组模式（并发）
 
-- `run` 与 `execute` 是同一个函数。
-- 多次运行时，旧任务会先被取消。
-- 组件卸载时，当前任务自动取消。
+```ts
+const task = useTask(
+  [
+    ({ params, signal }) => api.getProfile(params.userId, { signal }),
+    ({ params, signal }) => api.getNotices(params.userId, { signal })
+  ],
+  { concurrency: 2, mode: 'fail-fast' }
+);
+
+await task.run({ userId: 'u1' });
+```
+
+## 返回字段
+
+- `taskId`
+- `status`
+- `loading`
+- `data`
+- `error`
+- `meta`
+- `run`
+- `execute`
+- `cancel`
+- `reset`

@@ -8,7 +8,7 @@
 
 ## Primary API (current draft)
 - `runTask`
-- `runParallel`
+- `runTask` (array input = parallel mode)
 - `createRunner`
 - `useTask` from `mangoo/react`
 - `useTask` from `mangoo/vue`

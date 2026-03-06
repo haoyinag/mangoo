@@ -6,49 +6,47 @@
 import { useTask } from 'mangoo/react';
 ```
 
-## Basic usage
+## Function input mode
 
 ```tsx
-import { useTask } from 'mangoo/react';
-
-type LoginInput = { account: string; password: string };
-
-type LoginData = { accessToken: string };
-
-export function LoginForm() {
-  const { run, cancel, status, loading, data, error, meta } = useTask<LoginInput, LoginData, { phase: string }>(
-    async ({ params, signal, setMeta }) => {
-      setMeta({ phase: 'auth' });
-      const login = await api.login(params, { signal });
-
-      setMeta({ phase: 'token' });
-      return api.getToken(login.sessionId, { signal });
-    },
-    { concurrency: 4, mode: 'fail-fast' },
-    { phase: 'idle' }
-  );
-
-  return (
-    <div>
-      <button onClick={() => run({ account: 'demo', password: '123456' })} disabled={loading}>
-        Login
-      </button>
-      <button onClick={() => cancel('manual_cancel')} disabled={!loading}>
-        Cancel
-      </button>
-
-      <p>Status: {status}</p>
-      <p>Phase: {meta.phase}</p>
-      <p>Error: {error?.message}</p>
-      <p>Token: {data?.accessToken}</p>
-    </div>
-  );
-}
+const task = useTask(
+  async ({ params, signal, setMeta }) => {
+    setMeta({ phase: 'saving' });
+    return api.save(params, { signal });
+  },
+  { concurrency: 4, mode: 'fail-fast' },
+  { phase: 'idle' }
+);
 ```
+
+## Array input mode
+
+```tsx
+const task = useTask(
+  [
+    ({ params, signal }) => api.getProfile(params.userId, { signal }),
+    ({ params, signal }) => api.getNotices(params.userId, { signal })
+  ],
+  { concurrency: 2, mode: 'fail-fast' }
+);
+
+const result = await task.run({ userId: 'u1' });
+```
+
+## Returned fields
+
+- `taskId`
+- `status`
+- `loading`
+- `data`
+- `error`
+- `meta`
+- `run`
+- `execute` (`run` alias)
+- `cancel`
+- `reset`
 
 ## Behavior notes
 
-- `run(params?, options?)` starts one run and returns `TaskResult`.
-- `execute` is an alias of `run`.
-- starting a new `run` cancels previous run with reason `replaced_by_new_run`.
-- on unmount, current task is canceled with reason `component_unmounted`.
+- calling `run` again cancels previous run (`replaced_by_new_run`)
+- unmount cancels current run (`component_unmounted`)

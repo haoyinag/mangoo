@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useReactAsyncTask } from "../../src/index";
+import { useTask } from "../../src/react";
 import { getLoginQrCode, getToken, loginByPassword } from "../scenario/mockBusinessApi";
 
 type LoginForm = {
@@ -20,14 +20,12 @@ interface LoginPageProps {
 export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const [form, setForm] = useState<LoginForm>({ account: "", password: "", captcha: "" });
 
-  const { run, cancel, status, loading, error, meta } = useReactAsyncTask(
-    async ({ signal, input, setMeta }) => {
-      const payload = input as LoginForm;
-
+  const { run, cancel, status, loading, error, meta } = useTask<LoginForm, { accessToken: string }, { qrUrl: string }>(
+    async ({ signal, params, setMeta }) => {
       const qr = await getLoginQrCode(signal);
       setMeta({ qrUrl: qr.qrUrl });
 
-      const loginRes = await loginByPassword(payload, qr.qrId, signal);
+      const loginRes = await loginByPassword(params, qr.qrId, signal);
       const token = await getToken(loginRes.sessionId, signal);
 
       onLoginSuccess({ accessToken: token.accessToken, qrUrl: qr.qrUrl });
