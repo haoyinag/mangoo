@@ -20,8 +20,8 @@
 4. 核心层请求库无关
 
 ## 官方文档
-- 英文： [official/README.md](./official/README.md)
-- 中文： [official/README.zh-CN.md](./official/README.zh-CN.md)
+- 站点源码：[`docs/`](./docs)
+- 历史 Markdown 文档集：[`official/`](./official)
 
 ## 使用指南
 - [official/USAGE_REACT.zh-CN.md](./official/USAGE_REACT.zh-CN.md)
@@ -32,4 +32,10 @@
 npm install mangoo
 npm test
 npm run build
+npm run docs:dev
+npm run docs:build
 ```
+
+## 文档部署
+- GitHub Actions 工作流： [`.github/workflows/docs.yml`](./.github/workflows/docs.yml)
+- 默认通过 `DOCS_BASE` 按仓库名设置 Pages 基础路径。

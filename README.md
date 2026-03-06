@@ -20,8 +20,8 @@
 4. Keep core HTTP-client-agnostic
 
 ## Official Docs
-- English: [official/README.md](./official/README.md)
-- Chinese: [official/README.zh-CN.md](./official/README.zh-CN.md)
+- Site source: [`docs/`](./docs)
+- Legacy markdown set: [`official/`](./official)
 
 ## Usage Guides
 - [official/USAGE_REACT.md](./official/USAGE_REACT.md)
@@ -32,4 +32,10 @@
 npm install mangoo
 npm test
 npm run build
+npm run docs:dev
+npm run docs:build
 ```
+
+## Docs Deployment
+- GitHub Actions workflow: [`.github/workflows/docs.yml`](./.github/workflows/docs.yml)
+- Default Pages base path uses repository name via `DOCS_BASE`.
